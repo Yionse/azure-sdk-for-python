@@ -29,8 +29,8 @@ from azure.storage.blob.changefeed import ChangeFeedClient
 
 class ChangeFeedSamples(object):
 
-    ACCOUNT_NAME = os.getenv("AZURE_STORAGE_ACCOUNT_NAME")
-    ACCOUNT_KEY = os.getenv("AZURE_STORAGE_ACCESS_KEY")
+    ACCOUNT_NAME = os.getenv("STORAGE_ACCOUNT_NAME")
+    ACCOUNT_KEY = os.getenv("STORAGE_ACCOUNT_KEY")
 
     def list_events_by_page(self):
 
