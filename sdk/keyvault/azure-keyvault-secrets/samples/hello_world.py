@@ -34,7 +34,7 @@ from azure.identity import DefaultAzureCredential
 # Instantiate a secret client that will be used to call the service.
 # Here we use the DefaultAzureCredential, but any azure-identity credential can be used.
 # [START create_secret_client]
-VAULT_URL = os.environ["VAULT_URL"]
+VAULT_URL = os.environ["AZURE_KEYVAULT_URL"]
 credential = DefaultAzureCredential()
 client = SecretClient(vault_url=VAULT_URL, credential=credential)
 # [END create_secret_client]
