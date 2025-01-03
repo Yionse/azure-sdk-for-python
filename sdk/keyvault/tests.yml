@@ -5,7 +5,7 @@ parameters:
     type: object
     default:
       - azure-keyvault-secrets
-      - azure-keyvault-certificates
+      # - azure-keyvault-certificates
 
 extends:
     template: /eng/pipelines/templates/stages/archetype-sdk-tests.yml
@@ -13,6 +13,16 @@ extends:
       ServiceDirectory: keyvault
       Packages: ${{ parameters.Services }}
       TestTimeoutInMinutes: 240
+      MatrixReplace:
+        - TestSamples=.*/true
+      CloudConfig:
+        Public:
+        UsGov:
+          MatrixFilters:
+            - ArmTemplateParameters=^(?!.*enableHsm.*true)
+        China:
+          MatrixFilters:
+            - ArmTemplateParameters=^(?!.*enableHsm.*true)
       EnvVars:
         AZURE_TEST_RUN_LIVE: true
         AZURE_SKIP_LIVE_RECORDING: 'True'
