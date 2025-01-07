@@ -97,10 +97,10 @@
             "name": "[variables('primaryAccountName')]",
             "location": "[variables('location')]",
             "sku": {
-                "name": "Standard_RAGRS",
-                "tier": "Standard"
+              "name": "Premium_LRS",
+              "tier": "Premium"
             },
-            "kind": "StorageV2",
+            "kind": "BlockBlobStorage",
             "properties": {
                 "networkAcls": {
                     "bypass": "AzureServices",
@@ -111,16 +111,12 @@
                 "supportsHttpsTrafficOnly": true,
                 "encryption": {
                     "services": {
-                        "file": {
-                            "enabled": true
-                        },
                         "blob": {
                             "enabled": true
                         }
                     },
                     "keySource": "Microsoft.Storage"
-                },
-                "accessTier": "Hot"
+                }
             }
         },
         {
@@ -131,7 +127,10 @@
             "containerDeleteRetentionPolicy": {
                 "enabled": true,
                 "days": 1
-              }
+              },
+            "changeFeed": {
+              "enabled": true
+            }
         },
         "dependsOn": [
           "[variables('primaryAccountName')]"
