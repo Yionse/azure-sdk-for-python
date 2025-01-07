@@ -17,6 +17,7 @@ USAGE:
     python batch_samples_hello_world.py
 """
 
+import os
 from azure.batch import models
 from azure.batch import BatchClient
 from azure.identity import DefaultAzureCredential
@@ -88,8 +89,9 @@ if __name__ =='__main__':
     job_id = "my_job"
 
     parser = ConfigParser()
-    parser.read("samples.cfg")
-    batchAccountEndpoint = parser.get("Batch", "BATCH_ACCOUNT_ENDPOINT")
+    # parser.read("samples.cfg")
+    # batchAccountEndpoint = parser.get("Batch", "BATCH_ACCOUNT_ENDPOINT")
+    batchAccountEndpoint = os.environ["BATCH_ACCOUNT_ENDPOINT"]
 
     credentials = DefaultAzureCredential()
     client = BatchClient(batchAccountEndpoint, credentials)

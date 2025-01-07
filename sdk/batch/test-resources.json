@@ -1,0 +1,41 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "metadata": {
+    "_generator": {
+      "name": "bicep",
+      "version": "0.32.4.45862",
+      "templateHash": "11037507302466190941"
+    }
+  },
+  "parameters": {
+    "baseName": {
+      "type": "string",
+      "defaultValue": "[resourceGroup().name]",
+      "metadata": {
+        "description": "The base name for the Batch account."
+      }
+    },
+    "location": {
+      "type": "string",
+      "defaultValue": "[resourceGroup().location]",
+      "metadata": {
+        "description": "The location of the Batch account."
+      }
+    }
+  },
+  "resources": [
+    {
+      "type": "Microsoft.Batch/batchAccounts",
+      "apiVersion": "2024-07-01",
+      "name": "[parameters('baseName')]",
+      "location": "[parameters('location')]"
+    }
+  ],
+  "outputs": {
+    "BATCH_ACCOUNT_ENDPOINT": {
+      "type": "string",
+      "value": "[reference(resourceId('Microsoft.Batch/batchAccounts', parameters('baseName')), '2024-07-01').accountEndpoint]"
+    }
+  }
+}
