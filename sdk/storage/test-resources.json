@@ -36,6 +36,7 @@
         "softDeleteAccountName": "[concat('sftdl', parameters('baseName'))]",
         "premiumAccountName": "[concat('prem', parameters('baseName'))]",
         "versionedAccountName": "[concat('ver', parameters('baseName'))]",
+        "blobChangeFeedAccountName": "[concat('feed', parameters('baseName'))]",
         "dataLakeAccountName": "[concat('dtlk', parameters('baseName'))]",
         "dataLakeSoftDeleteAccountName": "[concat('dtlksd', parameters('baseName'))]",
         "premiumFileAccountName": "[concat('premf', parameters('baseName'))]",
@@ -376,6 +377,51 @@
             }
         },
         {
+            "type": "Microsoft.Storage/storageAccounts",
+            "apiVersion": "[variables('storageApiVersion')]",
+            "name": "[variables('blobChangeFeedAccountName')]",
+            "location": "[variables('location')]",
+            "sku": {
+                "name": "Premium_LRS",
+                "tier": "Premium"
+            },
+            "kind": "BlockBlobStorage",
+            "properties": {
+                "networkAcls": {
+                    "bypass": "AzureServices",
+                    "virtualNetworkRules": [],
+                    "ipRules": [],
+                    "defaultAction": "Allow"
+                },
+                "supportsHttpsTrafficOnly": true,
+                "encryption": {
+                    "services": {
+                        "blob": {
+                            "enabled": true
+                        }
+                    },
+                    "keySource": "Microsoft.Storage"
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Storage/storageAccounts/blobServices",
+            "apiVersion": "[variables('storageApiVersion')]",
+            "name": "[concat(variables('blobChangeFeedAccountName'), '/default')]",
+            "properties": {
+              "containerDeleteRetentionPolicy": {
+                  "enabled": true,
+                  "days": 1
+                },
+                "changeFeed": {
+                  "enabled": true
+                }
+            },
+            "dependsOn": [
+              "[variables('blobChangeFeedAccountName')]"
+            ]
+        },
+        {
             "type": "Microsoft.Storage/storageAccounts/blobServices",
             "apiVersion": "[variables('storageApiVersion')]",
             "name": "[concat(variables('dataLakeAccountName'), '/default')]",
@@ -558,6 +604,14 @@
         "STORAGE_ACCOUNT_KEY": {
             "type": "string",
             "value": "[listKeys(resourceId('Microsoft.Storage/storageAccounts', variables('primaryAccountName')), variables('storageApiVersion')).keys[0].value]"
+        },
+        "STORAGE_ACCOUNT_NAME_CHANGE_FEED": {
+            "type": "string",
+            "value": "[variables('blobChangeFeedAccountName')]"
+        },
+        "STORAGE_ACCOUNT_KEY_CHANGE_FEED": {
+            "type": "string",
+            "value": "[listKeys(resourceId('Microsoft.Storage/storageAccounts', variables('blobChangeFeedAccountName')), variables('storageApiVersion')).keys[0].value]"
         },
         "SECONDARY_STORAGE_ACCOUNT_NAME": {
             "type": "string",

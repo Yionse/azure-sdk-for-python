@@ -29,8 +29,8 @@ from azure.storage.blob.changefeed import ChangeFeedClient
 
 class ChangeFeedSamples(object):
 
-    ACCOUNT_NAME = os.getenv("AZURE_STORAGE_ACCOUNT_NAME")
-    ACCOUNT_KEY = os.getenv("AZURE_STORAGE_ACCESS_KEY")
+    ACCOUNT_NAME = os.getenv("STORAGE_ACCOUNT_NAME_CHANGE_FEED")
+    ACCOUNT_KEY = os.getenv("STORAGE_ACCOUNT_KEY_CHANGE_FEED")
 
     def list_events_by_page(self):
 
@@ -44,12 +44,12 @@ class ChangeFeedSamples(object):
         change_feed = cf_client.list_changes(results_per_page=10).by_page()
 
         # print first page of events
-        change_feed_page1 = next(change_feed)
+        change_feed_page1 = next(change_feed, "N")
         for event in change_feed_page1:
             print(event)
 
         # print second page of events
-        change_feed_page2 = next(change_feed)
+        change_feed_page2 = next(change_feed, "N")
         for event in change_feed_page2:
             print(event)
         # [END list_events_by_page]
@@ -83,14 +83,14 @@ class ChangeFeedSamples(object):
                                      credential=self.ACCOUNT_KEY)
         # to get continuation token
         change_feed = cf_client.list_changes(results_per_page=2).by_page()
-        change_feed_page1 = next(change_feed)
+        change_feed_page1 = next(change_feed, "N")
         for event in change_feed_page1:
             print(event)
         token = change_feed.continuation_token
 
         # restart using the continuation token
         change_feed2 = cf_client.list_changes(results_per_page=56).by_page(continuation_token=token)
-        change_feed_page2 = next(change_feed2)
+        change_feed_page2 = next(change_feed2, "N")
         for event in change_feed_page2:
             print(event)
 
@@ -99,16 +99,15 @@ class ChangeFeedSamples(object):
         cf_client = ChangeFeedClient("https://{}.blob.core.windows.net".format(self.ACCOUNT_NAME),
                                      credential=self.ACCOUNT_KEY)
         token = None
-        while True:
-            change_feed = cf_client.list_changes(results_per_page=500).by_page(continuation_token=token)
+        change_feed = cf_client.list_changes(results_per_page=500).by_page(continuation_token=token)
 
-            for page in change_feed:
-                for event in page:
-                    print(event)
-            token = change_feed.continuation_token
+        for page in change_feed:
+            for event in page:
+                print(event)
+        token = change_feed.continuation_token
 
-            sleep(60)
-            print("continue printing events")
+        # sleep(60)
+        print("continue printing events")
 
 
 if __name__ == '__main__':
