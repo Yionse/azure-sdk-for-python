@@ -613,6 +613,10 @@
           "type": "string",
            "value": "[format('https://{0}.queue.core.windows.net', variables('primaryAccountName'))]"
         },
+        "STORAGE_ACCOUNT_FILE_SHARE_URL": {
+          "type": "string",
+           "value": "[format('https://{0}.file.core.windows.net', variables('primaryAccountName'))]"
+        },
         "STORAGE_ACCOUNT_NAME_CHANGE_FEED": {
             "type": "string",
             "value": "[variables('blobChangeFeedAccountName')]"

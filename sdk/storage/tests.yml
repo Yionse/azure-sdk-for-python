@@ -6,7 +6,7 @@ parameters:
     default:
       # - azure-storage-blob
       # - azure-storage-file-datalake
-      # - azure-storage-file-share
+      - azure-storage-file-share
       - azure-storage-queue
       - azure-storage-blob-changefeed
 
