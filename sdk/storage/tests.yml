@@ -4,7 +4,7 @@ parameters:
   - name: Services
     type: object
     default:
-      # - azure-storage-blob
+      - azure-storage-blob
       - azure-storage-file-datalake
       - azure-storage-file-share
       - azure-storage-queue
