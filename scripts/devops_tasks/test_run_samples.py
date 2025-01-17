@@ -153,6 +153,9 @@ IGNORED_SAMPLES = {
         "sample_abstract_summary.py",
         "sample_abstract_summary_async.py",
     ],
+    "azure-storage-blob-changefeed": [
+        "change_feed_samples.py"
+    ]
 }
 
 def run_check_call_with_timeout(
