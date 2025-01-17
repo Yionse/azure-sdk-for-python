@@ -37,10 +37,10 @@ class ChangeFeedSamples(object):
         # Instantiate a ChangeFeedClient
         # [START list_events_by_page]
         # [START create_change_feed_client]
-        from azure.identity import AzureCliCredential
-        cli_credential = AzureCliCredential()
+        from azure.identity import DefaultAzureCredential,AzureAuthorityHosts
+        credential = DefaultAzureCredential(authority=AzureAuthorityHosts.AZURE_PUBLIC_CLOUD,validate_authority=False)
         cf_client = ChangeFeedClient("https://{}.blob.core.windows.net".format(self.ACCOUNT_NAME),
-                                     credential=cli_credential)
+                                     credential=credential)
         # [END create_change_feed_client]
 
         change_feed = cf_client.list_changes(results_per_page=10).by_page()
