@@ -63,18 +63,11 @@ class QueueAuthSamplesAsync(object):
         # Instantiate a QueueServiceClient using a shared access key
         # [START async_create_queue_service_client]
         from azure.storage.queue.aio import QueueServiceClient
-        from azure.storage.queue import QueueServiceClient, generate_account_sas, ResourceTypes, AccountSasPermissions
-        sas_token = generate_account_sas(
-            account_name=self.account_name, # type: ignore
-            account_key=self.access_key,
-            resource_types=ResourceTypes(service=True),
-            permission=AccountSasPermissions(read=True),
-            expiry = datetime.now(timezone.utc) + timedelta(days=1),
-        )
-        queue_service = QueueServiceClient(account_url=self.account_url, credential=sas_token)
+        queue_service = QueueServiceClient(account_url=self.account_url, credential=self.access_key)
         # [END async_create_queue_service_client]
         # Get information for the Queue Service
-        properties = queue_service.get_service_properties()
+        async with queue_service:
+            properties = await queue_service.get_service_properties()
 
     async def authentication_by_oauth_async(self):
         if self.account_url is None:
@@ -109,7 +102,7 @@ class QueueAuthSamplesAsync(object):
         queue_service = QueueServiceClient.from_connection_string(conn_str=self.connection_string)
 
         # Create a SAS token to use for authentication of a client
-        from azure.storage.queue import QueueServiceClient, generate_account_sas, ResourceTypes, AccountSasPermissions
+        from azure.storage.queue import generate_account_sas, ResourceTypes, AccountSasPermissions
         sas_token = generate_account_sas(
             self.account_name,
             self.access_key,
@@ -120,7 +113,8 @@ class QueueAuthSamplesAsync(object):
         token_auth_queue_service = QueueServiceClient(account_url=self.account_url, credential=sas_token)
 
         # Get information for the Queue Service
-        properties = token_auth_queue_service.get_service_properties()
+        async with token_auth_queue_service:
+            properties = await token_auth_queue_service.get_service_properties()
 
 
 async def main():
