@@ -29,29 +29,27 @@ from azure.storage.blob.changefeed import ChangeFeedClient
 
 class ChangeFeedSamples(object):
 
-    ACCOUNT_NAME = os.getenv("STORAGE_ACCOUNT_NAME_CHANGE_FEED")
-    ACCOUNT_KEY = os.getenv("STORAGE_ACCOUNT_KEY_CHANGE_FEED")
+    ACCOUNT_NAME = os.getenv("AZURE_STORAGE_ACCOUNT_NAME")
+    ACCOUNT_KEY = os.getenv("AZURE_STORAGE_ACCESS_KEY")
 
     def list_events_by_page(self):
 
         # Instantiate a ChangeFeedClient
         # [START list_events_by_page]
         # [START create_change_feed_client]
-        from azure.identity import AzureCliCredential
-        cli_credential = AzureCliCredential()
         cf_client = ChangeFeedClient("https://{}.blob.core.windows.net".format(self.ACCOUNT_NAME),
-                                     credential=cli_credential)
+                                     credential=self.ACCOUNT_KEY)
         # [END create_change_feed_client]
 
         change_feed = cf_client.list_changes(results_per_page=10).by_page()
 
         # print first page of events
-        change_feed_page1 = next(change_feed, "N")
+        change_feed_page1 = next(change_feed)
         for event in change_feed_page1:
             print(event)
 
         # print second page of events
-        change_feed_page2 = next(change_feed, "N")
+        change_feed_page2 = next(change_feed)
         for event in change_feed_page2:
             print(event)
         # [END list_events_by_page]
@@ -85,14 +83,14 @@ class ChangeFeedSamples(object):
                                      credential=self.ACCOUNT_KEY)
         # to get continuation token
         change_feed = cf_client.list_changes(results_per_page=2).by_page()
-        change_feed_page1 = next(change_feed, "N")
+        change_feed_page1 = next(change_feed)
         for event in change_feed_page1:
             print(event)
         token = change_feed.continuation_token
 
         # restart using the continuation token
         change_feed2 = cf_client.list_changes(results_per_page=56).by_page(continuation_token=token)
-        change_feed_page2 = next(change_feed2, "N")
+        change_feed_page2 = next(change_feed2)
         for event in change_feed_page2:
             print(event)
 
@@ -101,15 +99,16 @@ class ChangeFeedSamples(object):
         cf_client = ChangeFeedClient("https://{}.blob.core.windows.net".format(self.ACCOUNT_NAME),
                                      credential=self.ACCOUNT_KEY)
         token = None
-        change_feed = cf_client.list_changes(results_per_page=500).by_page(continuation_token=token)
+        while True:
+            change_feed = cf_client.list_changes(results_per_page=500).by_page(continuation_token=token)
 
-        for page in change_feed:
-            for event in page:
-                print(event)
-        token = change_feed.continuation_token
+            for page in change_feed:
+                for event in page:
+                    print(event)
+            token = change_feed.continuation_token
 
-        # sleep(60)
-        print("continue printing events")
+            sleep(60)
+            print("continue printing events")
 
 
 if __name__ == '__main__':
