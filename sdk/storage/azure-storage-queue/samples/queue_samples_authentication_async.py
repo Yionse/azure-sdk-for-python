@@ -26,7 +26,7 @@ USAGE:
 """
 
 
-from datetime import datetime, timedelta, timezone
+from datetime import datetime, timedelta
 import asyncio
 import os
 import sys
@@ -77,7 +77,8 @@ class QueueAuthSamplesAsync(object):
 
         # [START async_create_queue_service_client_oauth]
         # Get a token credential for authentication
-
+        from azure.identity.aio import DefaultAzureCredential
+        token_credential = DefaultAzureCredential()
         # Instantiate a QueueServiceClient using a token credential
         from azure.storage.queue.aio import QueueServiceClient
         queue_service = QueueServiceClient(account_url=self.account_url, credential=self.access_key)
@@ -108,7 +109,7 @@ class QueueAuthSamplesAsync(object):
             self.access_key,
             resource_types=ResourceTypes(service=True),
             permission=AccountSasPermissions(read=True),
-            expiry = datetime.now(timezone.utc) + timedelta(days=1),
+            expiry=datetime.utcnow() + timedelta(hours=1)
         )
         token_auth_queue_service = QueueServiceClient(account_url=self.account_url, credential=sas_token)
 
