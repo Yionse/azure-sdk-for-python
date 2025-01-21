@@ -8,7 +8,6 @@ parameters:
       - azure-storage-file-datalake
       - azure-storage-file-share
       - azure-storage-queue
-      - azure-storage-blob-changefeed
 
 extends:
     template: /eng/pipelines/templates/stages/archetype-sdk-tests.yml
