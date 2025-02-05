@@ -109,7 +109,7 @@ class CommonBlobSamples(object):
 
         # [START undelete_blob]
         # Undelete the blob before the retention policy expires
-        blob_client.undelete_blob()
+        # blob_client.undelete_blob()
         # [END undelete_blob]
 
         # [START get_blob_properties]

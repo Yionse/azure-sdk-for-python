@@ -104,7 +104,7 @@
             "properties": {
                 "deleteRetentionPolicy": {
                     "enabled": true,
-                    "days": 7
+                    "days": 1
                 },
                "containerDeleteRetentionPolicy": {
                     "enabled": true,
@@ -142,7 +142,7 @@
               },
               "deleteRetentionPolicy": {
                     "enabled": true,
-                    "days": 7
+                    "days": 1
                 }
         },
         "dependsOn": [
